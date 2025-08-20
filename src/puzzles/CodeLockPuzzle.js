@@ -7,7 +7,7 @@ export default class CodeLockPuzzle {
       digits: 4,
       x: DESIGN_SIZE / 2,
       y: DESIGN_SIZE / 2,
-      hint: null
+      hint: null,
     };
 
     this.scene = scene;
@@ -18,12 +18,21 @@ export default class CodeLockPuzzle {
     this.boxes = [];
     this.frame = null;
     this.hint = null;
+
+    // NEU: dynamische Aufgaben + Lösung
+    this.problems = [];
+    this.solution = [];
+    this.problemTexts = [];
   }
 
   preload() { /* keine Assets nötig */ }
 
   create(parentContainer) {
     const { digits } = this.cfg;
+
+    // --- Aufgaben generieren (immer 0–9 als Ergebnis) ---
+    this.problems = this._genProblems(digits);
+    this.solution = this.problems.map(p => p.result);
 
     // Layoutwerte
     const spacing   = DESIGN_SIZE * 0.07;
@@ -36,12 +45,44 @@ export default class CodeLockPuzzle {
     // Wenn wir in einem Container sind → Ursprung (0,0)
     const baseX = parentContainer ? 0 : this.cfg.x;
     const baseY = parentContainer ? 0 : this.cfg.y;
-
+  const titleY = baseY - DESIGN_SIZE * 0.20;
+  const title = this._makeText(
+    baseX,
+    titleY,
+    "DER KUECHENSCHRANK HAT EIN VORHAENGESCHLOSS.",
+    {
+      fontFamily: "SpukFont",
+      fontSize: `${DESIGN_SIZE * 0.026}px`,
+      color: "#ffffff",
+      align: "center",
+      wordWrap: { width: DESIGN_SIZE * 0.9 }
+    },
+    parentContainer
+  ).setOrigin(0.5);
     const startX = baseX - ((digits - 1) * spacing) / 2;
 
     // Rahmen
-    this.frame = this._makeRect(baseX, baseY, digits * spacing + spacing, panelH, 0x000000, 0.25, parentContainer)
-      .setStrokeStyle(2, 0x777777);
+    this.frame = this._makeRect(
+      baseX, baseY, digits * spacing + spacing, panelH, 0x000000, 0.25, parentContainer
+    ).setStrokeStyle(2, 0x777777);
+
+    // AUFGABEN-ANZEIGE (immer sichtbar)
+    const problemsY = baseY - DESIGN_SIZE * 0.12;
+    const problemsStr = this.problems
+      .map((p, i) => `${i + 1}) ${p.a} ${p.op} ${p.b} = ?`)
+      .join("    ");
+    const problemsText = this._makeText(
+      baseX, problemsY, problemsStr,
+      {
+        fontFamily: "Arial",
+        fontSize: `${DESIGN_SIZE * 0.02}px`,
+        color: "#dddddd",
+        align: "center",
+        wordWrap: { width: Math.max(digits * spacing + spacing, DESIGN_SIZE * 0.85) }
+      },
+      parentContainer
+    ).setOrigin(0.5);
+    this.problemTexts.push(problemsText);
 
     // Ziffernfelder + Pfeile
     for (let i = 0; i < digits; i++) {
@@ -68,28 +109,6 @@ export default class CodeLockPuzzle {
       dn.on("pointerdown", () => this._decrement(i, txt));
 
       this.boxes.push({ rect, txt, up, dn });
-    }
-
-    // Hinweis erst nach Klick anzeigen
-    if (this.cfg.hint) {
-      const hintBtn = this._makeText(
-        baseX, baseY + DESIGN_SIZE * 0.1,
-        "HINWEIS",
-        { fontFamily: "SpukFont", fontSize: `${DESIGN_SIZE * 0.022}px`, color: "#ffffffff" },
-        parentContainer
-      ).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-      hintBtn.on("pointerdown", () => {
-        if (!this.hint) {
-          this.hint = this._makeText(
-            baseX,
-            baseY + DESIGN_SIZE * 0.37,
-            this.cfg.hint,
-            { fontFamily: "SpukFont", fontSize: `${DESIGN_SIZE * 0.018}px`, color: "#dddddd", wordWrap: { width: digits * spacing + spacing } },
-            parentContainer
-          ).setOrigin(0.5);
-        }
-      });
     }
   }
 
@@ -120,12 +139,54 @@ export default class CodeLockPuzzle {
   }
 
   _check() {
-    const sol = this.cfg.solution || [];
-    if (sol.length !== this.values.length) return;
-    for (let i = 0; i < sol.length; i++) {
-      if (this.values[i] !== sol[i]) return;
+    if (this.solution.length !== this.values.length) return;
+    for (let i = 0; i < this.solution.length; i++) {
+      if (this.values[i] !== this.solution[i]) return;
     }
     this.scene.time.delayedCall(150, () => this.onSolved && this.onSolved());
+  }
+
+  // --- NEU: Aufgaben-Generator (nur Grundrechenarten, Ergebnis 0–9) ---
+  _genProblems(n) {
+    const probs = [];
+    const ops = ["+", "-", "×", "÷"];
+    for (let i = 0; i < n; i++) {
+      const op = ops[Phaser.Math.Between(0, ops.length - 1)];
+      let a, b, result;
+
+      if (op === "+") {
+        // a+b <= 9
+        a = Phaser.Math.Between(0, 9);
+        b = Phaser.Math.Between(0, 9 - a);
+        result = a + b;
+      } else if (op === "-") {
+        // a-b >= 0
+        a = Phaser.Math.Between(0, 9);
+        b = Phaser.Math.Between(0, a);
+        result = a - b;
+      } else if (op === "×") {
+        // a*b <= 9
+        // Variante 1: Zielprodukt vorgeben, dann Faktoren wählen
+        const target = Phaser.Math.Between(0, 9);
+        // Teiler von target im Bereich 1..9
+        const divisors = [];
+        for (let d = 1; d <= 9; d++) if (target % d === 0) divisors.push(d);
+        const bCand = target === 0 ? Phaser.Math.Between(1, 9) : divisors[Phaser.Math.Between(0, divisors.length - 1)];
+        const aCand = target === 0 ? 0 : target / bCand;
+        a = aCand;
+        b = bCand;
+        result = target;
+      } else if (op === "÷") {
+        // a ÷ b = r, ganzzahlig, 0..9, b in 1..9
+        const r = Phaser.Math.Between(0, 9);
+        b = Phaser.Math.Between(1, 9);
+        a = r * b;
+        result = r;
+      }
+
+      probs.push({ a, op, b, result });
+    }
+    return probs;
   }
 
   destroy() {
@@ -137,5 +198,6 @@ export default class CodeLockPuzzle {
       b.dn.destroy();
     });
     this.hint?.destroy();
+    this.problemTexts.forEach(t => t.destroy());
   }
 }

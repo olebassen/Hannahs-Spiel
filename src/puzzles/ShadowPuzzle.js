@@ -9,7 +9,8 @@ export default class ShadowPuzzle {
       slots: [],      // [{x, y, targetAngle}, ...] relativ zum Zentrum
       x: DESIGN_SIZE / 2,
       y: DESIGN_SIZE / 2,
-      hint: null
+      hint: null,
+      randomizeSolution: true // <-- NEU: Lösung pro Start randomisieren
     };
 
     this.scene = scene;
@@ -19,6 +20,10 @@ export default class ShadowPuzzle {
     this.container = null;
     this.candles = [];
     this.maskImage = null;
+
+    // <-- NEU: Hier legen wir die zufällige Lösung einmal fest.
+    // 45°-Raster, pro Slot eigener Zufallswinkel.
+    this.solutionAngles = null;
   }
 
   preload() {
@@ -43,6 +48,22 @@ export default class ShadowPuzzle {
       .setAlpha(0.1);
     this.container.add(this.maskImage);
 
+    // <-- NEU: Lösung pro Slot bestimmen
+    // Option A (Default): komplett zufällig in 45°-Schritten
+    // Option B: vorhandene targetAngle um zufälligen 45°-Offset verschieben
+    this.solutionAngles = this.cfg.slots.map((slot) => {
+      if (this.cfg.randomizeSolution) {
+        // A: komplett random (0..315 in 45er Schritten)
+        const step = Phaser.Math.Between(0, 7) * 45;
+        return step;
+        // Wenn du stattdessen B willst, nimm:
+        // const offset = Phaser.Math.Between(0, 7) * 45;
+        // return ((slot.targetAngle || 0) + offset) % 360;
+      } else {
+        return slot.targetAngle || 0;
+      }
+    });
+
     // Kerzen
     this.cfg.slots.forEach((slot, idx) => {
       const candle = this.scene.add.image(slot.x, slot.y, this.cfg.img)
@@ -50,7 +71,7 @@ export default class ShadowPuzzle {
         .setInteractive({ useHandCursor: true })
         .setData("angle", 0);
 
-  candle.setDisplaySize(DESIGN_SIZE * 0.08, DESIGN_SIZE * 0.12);
+      candle.setDisplaySize(DESIGN_SIZE * 0.08, DESIGN_SIZE * 0.12);
 
       // Klick = Kerze drehen
       candle.on("pointerdown", () => {
@@ -93,11 +114,11 @@ export default class ShadowPuzzle {
   }
 
   _checkSolved() {
-    const sol = this.cfg.slots.map(s => s.targetAngle);
+    // <-- NEU: Gegen die zufällig gesetzte Lösung prüfen
     let correct = 0;
 
     this.candles.forEach((c, i) => {
-      if (c.getData("angle") === sol[i]) correct++;
+      if (c.getData("angle") === this.solutionAngles[i]) correct++;
     });
 
     // Fortschritt: Silhouette deutlicher sichtbar
@@ -125,5 +146,6 @@ export default class ShadowPuzzle {
     this.container?.destroy();
     this.candles = [];
     this.maskImage = null;
+    this.solutionAngles = null; // <-- sauber aufräumen
   }
 }

@@ -6,6 +6,19 @@ export default class BootScene extends Phaser.Scene {
   constructor() { super("BootScene"); }
 
   preload() {
+
+     this.titleText = this.add.text(
+            this.scale.width / 2,   // x Position: Bildschirmmitte
+            this.scale.height / 2,  // y Position: Bildschirmmitte
+            'EINE NACHT IM SPUKINTERNAT',      // Text
+            {
+                fontFamily: 'SpukFont',
+                fontSize: '48px',
+                color: '#ffffff'
+            }
+        );
+        this.titleText.setOrigin(0.5); // Text zentrieren
+
     // Avatar Basis
     this.load.image("base", "assets/images/avatar/base.png");
 

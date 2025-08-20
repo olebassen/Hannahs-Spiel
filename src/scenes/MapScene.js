@@ -194,9 +194,9 @@ export default class MapScene extends Phaser.Scene {
   }
 
   _addTitle() {
-    const title = this.add.text(DESIGN_SIZE/2, 60, "NACHT IM SPUKINTERNAT", {
+    const title = this.add.text(DESIGN_SIZE/2, 60, "EINE NACHT IM SPUKINTERNAT", {
       fontFamily: "SpukFont",
-      fontSize: "48px",
+      fontSize: "32px",
       color: "#fff",
       stroke: "#000",
       strokeThickness: 6,
