@@ -5,7 +5,10 @@
   "puzzle": {
     "type": "path",
     "config": {
-      "points": [
+      "variants": [
+        {
+          "id": "ukulele",
+          "points": [
         { "x": -45, "y": 100 }, 
         { "x": -45, "y": -300 }, 
         { "x": -15, "y": -300 }, 
@@ -20,9 +23,74 @@
         { "x": -130, "y": 100 }, 
         { "x": -150, "y": 300 }, 
         { "x": 150, "y": 300 }
-      ],
-      "order": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,8],
-      "hint": "VERBINDE DIE PUNKTE ZU EINER UKULELE."
+          ],
+          "order": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,8],
+          "hint": "VERBINDE DIE PUNKTE ZU EINER UKULELE."
+        },
+
+        {
+          "id": "triangel",
+          "points": [
+            { "x": -140, "y": -120 }, { "x": 140, "y": -120 }, { "x": 0, "y": 120 },
+            { "x": -180, "y": -160 }, { "x": -120, "y": -80 }
+          ],
+          "order": [0,1,2,0,3,4],
+          "hint": "VERBINDE DIE PUNKTE ZU EINEM TRIANGEL."
+        },
+
+        {
+          "id": "trommel",
+          "points": [
+            { "x": -170, "y": -80 }, { "x": 170, "y": -80 },
+            { "x": 170, "y": 80 },   { "x": -170, "y": 80 }
+          ],
+          "order": [0,1,2,3,0],
+          "hint": "VERBINDE DIE PUNKTE ZU EINER TROMMEL."
+        },
+
+        {
+          "id": "blockfloete",
+          "points": [
+            { "x": -190, "y": -22 }, { "x": 190, "y": -22 },
+            { "x": 190, "y": 22 },   { "x": -190, "y": 22 }
+          ],
+          "order": [0,1,2,3,0],
+          "hint": "VERBINDE DIE PUNKTE ZU EINER BLOCKFLOETE."
+        },
+
+        {
+          "id": "tamburin",
+          "points": [
+            { "x": 0, "y": -170 },   { "x": 125, "y": -125 },
+            { "x": 170, "y": 0 },    { "x": 125, "y": 125 },
+            { "x": 0, "y": 170 },    { "x": -125, "y": 125 },
+            { "x": -170, "y": 0 },   { "x": -125, "y": -125 }
+          ],
+          "order": [0,1,2,3,4,5,6,7,0],
+          "hint": "VERBINDE DIE PUNKTE ZU EINEM TAMBURIN."
+        },
+
+        {
+          "id": "harfe",
+          "points": [
+            { "x": -150, "y": -160 }, { "x": -150, "y": 160 }, { "x": 140, "y": 160 }
+          ],
+          "order": [0,1,2,0],
+          "hint": "VERBINDE DIE PUNKTE ZU EINER HARFE."
+        },
+
+        {
+          "id": "trompete",
+          "points": [
+            { "x": -190, "y": -30 }, { "x": 40, "y": -30 },
+            { "x": 120, "y": -80 },  { "x": 180, "y": -80 },
+            { "x": 180, "y": 80 },   { "x": 120, "y": 80 },
+            { "x": 40, "y": 30 },    { "x": -190, "y": 30 }
+          ],
+          "order": [0,1,2,3,4,5,6,7,0],
+          "hint": "VERBINDE DIE PUNKTE ZU EINER TROMPETE."
+        }
+      ]
     }
   },
   "surprise": {
