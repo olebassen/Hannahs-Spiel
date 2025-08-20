@@ -101,10 +101,10 @@ this.tweens.add({
     const posY = DESIGN_SIZE - 80;       
     this.characterContainer = this.add.container(posX, posY);
 
-    if (charData.bottom) this.characterContainer.add(this.add.image(0, 100, charData.bottom).setScale(0.5).setOrigin(0.5,1));
-    if (charData.shoes)  this.characterContainer.add(this.add.image(0, 140, charData.shoes).setScale(0.5).setOrigin(0.5,1));
-    if (charData.face)   this.characterContainer.add(this.add.image(0, -220, charData.face).setScale(0.5).setOrigin(0.5,1));
-    if (charData.top)    this.characterContainer.add(this.add.image(0, -40, charData.top).setScale(0.4).setOrigin(0.5,1));
+    if (charData.bottom) this.characterContainer.add(this.add.image(-100, 100, charData.bottom).setScale(0.5).setOrigin(0.5,1));
+    if (charData.shoes)  this.characterContainer.add(this.add.image(-100, 140, charData.shoes).setScale(0.5).setOrigin(0.5,1));
+    if (charData.face)   this.characterContainer.add(this.add.image(-100, -220, charData.face).setScale(0.5).setOrigin(0.5,1));
+    if (charData.top)    this.characterContainer.add(this.add.image(-100, -40, charData.top).setScale(0.4).setOrigin(0.5,1));
   }
 
   _animatePuzzleIn(puzzleCfg){
