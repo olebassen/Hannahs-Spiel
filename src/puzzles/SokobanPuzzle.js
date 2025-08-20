@@ -1,20 +1,89 @@
 export default class SokobanPuzzle {
   constructor(scene, cfg, onSolved) {
     this.scene = scene;
-    this.cfg = cfg;
+    this.cfg = Object.assign(
+      {
+        randomize: true,  // NEU: bei Start transformieren
+        levels: null      // NEU: optional Array aus Grids (jeweils Array<string>)
+      },
+      cfg || {}
+    );
     this.onSolved = onSolved;
 
-    this.grid = cfg.grid.map(r => r.split(""));
-    this.tileset = cfg.tileset;
-    this.tileSize = cfg.tileSize || 32;
+    // --- NEU: Level wählen & zufällig transformieren ---
+    const baseGrid = this._pickBaseGrid(this.cfg);
+    const finalGrid = this.cfg.randomize ? this._applyRandomSymmetry(baseGrid) : baseGrid;
 
-    this.offsetX = cfg.offsetX || 0;
-    this.offsetY = cfg.offsetY || 0;
+    this.grid = finalGrid.map(r => r.split(""));
+
+    this.tileset = this.cfg.tileset;
+    this.tileSize = this.cfg.tileSize || 32;
+
+    this.offsetX = this.cfg.offsetX || 0;
+    this.offsetY = this.cfg.offsetY || 0;
 
     this.player = null;
     this.map = [];
     this.goals = [];
     this.parentContainer = null;
+
+    // Für sauberes Off() beim destroy
+    this._pointerHandler = null;
+  }
+
+  // --------- Randomisierungshilfen ---------
+
+  _pickBaseGrid(cfg) {
+    if (cfg.levels && Array.isArray(cfg.levels) && cfg.levels.length > 0) {
+      // levels: Array<Array<string>>
+      const idx = Phaser.Math.Between(0, cfg.levels.length - 1);
+      return cfg.levels[idx].slice(); // Kopie
+    }
+    // fallback: einzelnes grid
+    return (cfg.grid || []).slice();
+  }
+
+  _applyRandomSymmetry(gridStrRows) {
+    // D8-Symmetrien: 4 Rotationen x (optional) Spiegelung
+    const ops = [
+      "I", "R90", "R180", "R270",
+      "FH", "FV", "FD", "FAD" // horizontal, vertikal, Diagonale, Anti-Diagonale
+    ];
+    const op = ops[Phaser.Math.Between(0, ops.length - 1)];
+
+    // in 2D-Char-Array wandeln
+    const A = gridStrRows.map(r => r.split(""));
+    const h = A.length;
+    const w = A[0]?.length || 0;
+
+    const B = [];
+    const put = (x, y, ch) => { if (!B[y]) B[y] = []; B[y][x] = ch; };
+
+    // Koordinatenabbildungen
+    const mapCoord = {
+      I:   (x, y) => [x, y],
+      R90:(x, y) => [h - 1 - y, x],
+      R180:(x, y) => [w - 1 - x, h - 1 - y],
+      R270:(x, y) => [y, w - 1 - x],
+      FH: (x, y) => [w - 1 - x, y],            // horizontal spiegeln
+      FV: (x, y) => [x, h - 1 - y],            // vertikal spiegeln
+      FD: (x, y) => [y, x],                    // Hauptdiagonale
+      FAD:(x, y) => [w - 1 - y, h - 1 - x],    // Gegendiagonale
+    }[op];
+
+    // neue Größe ermitteln (bei R90/R270 und Diagonalen vertauscht)
+    const newW = (op === "R90" || op === "R270" || op === "FD" || op === "FAD") ? h : w;
+    const newH = (op === "R90" || op === "R270" || op === "FD" || op === "FAD") ? w : h;
+
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const [nx, ny] = mapCoord(x, y);
+        put(nx, ny, A[y][x]);
+      }
+    }
+
+    // zurück in Array<string>
+    return Array.from({ length: newH }, (_, y) => (B[y] || []).map(ch => ch || " ").join(""));
   }
 
   create(parentContainer) {
@@ -58,7 +127,6 @@ export default class SokobanPuzzle {
           };
           this.playerLayer.add(this.player.sprite);
           this.grid[y][x] = " "; // Player ist kein Tile
-          console.log("Player initialisiert bei:", x, y);
         }
 
         if (ch === "$") {
@@ -74,8 +142,6 @@ export default class SokobanPuzzle {
 
           this.coffinLayer.add(coffin);
           row.push(coffin);
-
-          console.log("Coffin bei:", x, y);
         } else {
           row.push(null);
         }
@@ -84,7 +150,7 @@ export default class SokobanPuzzle {
     });
 
     // Maussteuerung
-    this.scene.input.on("pointerdown", (pointer) => {
+    this._pointerHandler = (pointer) => {
       let localX = pointer.worldX;
       let localY = pointer.worldY;
 
@@ -96,17 +162,15 @@ export default class SokobanPuzzle {
       const gx = Math.floor((localX - this.offsetX) / this.tileSize);
       const gy = Math.floor((localY - this.offsetY) / this.tileSize);
 
-      console.log("Mausklick auf Grid:", gx, gy);
-
       const dx = gx - this.player.x;
       const dy = gy - this.player.y;
 
       if (Math.abs(dx) + Math.abs(dy) === 1) {
         this.move(dx, dy);
-      } else {
-        console.log("Klick ignoriert – kein Nachbarfeld");
       }
-    });
+    };
+
+    this.scene.input.on("pointerdown", this._pointerHandler);
   }
 
   move(dx, dy) {
@@ -128,7 +192,6 @@ export default class SokobanPuzzle {
       coffin.x = this.offsetX + nnx * this.tileSize;
       coffin.y = this.offsetY + nny * this.tileSize;
       this.map[nny][nnx] = coffin;
-        console.log("Coffin neue Position:", coffin.gridX, coffin.gridY);
     }
 
     this.player.x = nx;
@@ -143,33 +206,38 @@ export default class SokobanPuzzle {
     return this.map[y] ? this.map[y][x] : null;
   }
 
-checkSolved() {
-  for (let goal of this.goals) {
-    console.log("Check Goal bei:", goal.x, goal.y);
-    const coffin = this.getCoffinAt(goal.x, goal.y);
-    if (coffin) {
-      console.log("Coffin auf Goal entdeckt → Puzzle gelöst!");
-      if (this.onSolved) this.onSolved();
-      return;
+  checkSolved() {
+    // Dein bisheriges Kriterium: Sobald EIN Ziel belegt ist → gelöst.
+    // Wenn du "alle Ziele belegen" willst, ersetze die Logik unten durch den Kommentarblock.
+    for (let goal of this.goals) {
+      const coffin = this.getCoffinAt(goal.x, goal.y);
+      if (coffin) {
+        if (this.onSolved) this.onSolved();
+        return;
+      }
     }
+
+    /* Alternative: ALLE Ziele müssen belegt sein
+    const allCovered = this.goals.every(g => this.getCoffinAt(g.x, g.y));
+    if (allCovered && this.onSolved) this.onSolved();
+    */
   }
-  console.log("Noch nicht gelöst");
-}
-destroy() {
-  // Input-Handler entfernen
-  this.scene.input.off("pointerdown");
 
-  // Alles zerstören
-  if (this.tileLayer) this.tileLayer.destroy(true);
-  if (this.coffinLayer) this.coffinLayer.destroy(true);
-  if (this.playerLayer) this.playerLayer.destroy(true);
-  if (this.parentContainer) this.parentContainer.destroy(true);
+  destroy() {
+    // Input-Handler entfernen
+    if (this._pointerHandler) {
+      this.scene.input.off("pointerdown", this._pointerHandler);
+      this._pointerHandler = null;
+    }
 
-  this.map = [];
-  this.goals = [];
-  this.player = null;
-}
+    // Alles zerstören
+    if (this.tileLayer) this.tileLayer.destroy(true);
+    if (this.coffinLayer) this.coffinLayer.destroy(true);
+    if (this.playerLayer) this.playerLayer.destroy(true);
+    if (this.parentContainer) this.parentContainer.destroy(true);
 
-
-
+    this.map = [];
+    this.goals = [];
+    this.player = null;
+  }
 }

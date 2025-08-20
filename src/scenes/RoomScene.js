@@ -60,7 +60,10 @@ export default class RoomScene extends Phaser.Scene {
 
   create(){
     fitSquareCamera(this);
-    this.scale.on("resize", () => fitSquareCamera(this));
+    this.scale.on("resize", () => {
+      fitSquareCamera(this);
+      if (this.restartBtn) this.restartBtn.setPosition(DESIGN_SIZE - 16, 16);
+  });
     this.cameras.main.setBackgroundColor("#0f0f17");
 // --- Kreisblende-Effekt ---
 const circle = this.add.circle(DESIGN_SIZE/2, DESIGN_SIZE/2, 20, 0x000000)
@@ -95,6 +98,21 @@ this.tweens.add({
     // --- Puzzle direkt einblenden ---
     this._animatePuzzleIn(this.room.puzzle);
   
+    // --- Neustart-Button oben rechts ---
+    this.restartBtn = this.add.text(
+    DESIGN_SIZE - 16, 16,
+    "↻ NEUSTART",
+    { fontFamily: "SpukFont", fontSize: "20px", color: "#ffffff", backgroundColor: "rgba(0,0,0,0.35)" }
+)
+  .setOrigin(1, 0)
+  .setPadding(10, 6, 10, 6)
+  .setDepth(10000)
+  .setInteractive({ useHandCursor: true })
+  .on("pointerover", () => this.restartBtn.setAlpha(0.9))
+  .on("pointerout", () => this.restartBtn.setAlpha(1))
+  .on("pointerdown", () => this._restartPuzzle());
+
+
     // --- Charakter links unten ---
     const charData = save.getCharacter();
     const posX = 120;                    
@@ -196,6 +214,19 @@ this.tweens.add({
         return;
     }
   }
+
+_restartPuzzle() {
+  // laufendes Puzzle sauber abbauen
+  try {
+    this.currentPuzzle?.destroy?.();
+  } catch (e) { /* ignore */ }
+  this.puzzleContainer?.destroy?.();
+
+  // ggf. einmalige Event-Listener sind .once gebunden; kein Off nötig.
+  // Neues Puzzle instant neu aufbauen
+  this._animatePuzzleIn(this.room.puzzle);
+}
+
 
 _solve(room){
   save.addSolved(this.roomId);
