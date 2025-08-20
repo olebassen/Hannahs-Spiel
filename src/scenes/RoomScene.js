@@ -252,10 +252,10 @@ _solve(room){
   this.tweens.add({
     targets: flash,
     alpha: { from: 0.7, to: 0 }, // erst sichtbar, dann ausblenden
-    duration: 2000,
+    duration: 200,
     ease: "Cubic.easeOut",
     onComplete: () => {
-        this.time.delayedCall(0, () => {
+        this.time.delayedCall(1000, () => {
           this.currentPuzzle?.destroy();
           this.puzzleContainer?.destroy();
           this.scene.start("SurpriseScene", { roomId: this.roomId });

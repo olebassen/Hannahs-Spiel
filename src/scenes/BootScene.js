@@ -115,7 +115,8 @@ export default class BootScene extends Phaser.Scene {
     this.load.image("web_goal", "assets/images/puzzles/web_goal.png");
     this.load.image("spinne_party", "assets/images/surprise/spinne_party.png");
     this.load.image("art:kristallene_spinne", "assets/images/artifacts/kristallene_spinne.png");
-    
+        this.load.image("player2", "assets/images/puzzles/player2.png");
+
 // Raum 10
    for (let i = 1; i <= 16; i++) {
       this.load.image(`grab${i}`, `assets/images/puzzles/grab (${i}).png`);
