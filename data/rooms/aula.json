@@ -17,8 +17,10 @@
       "art:grabrose", 
       "art:verknotetes_seil", 
       "art:zerbrochene_sternkarte",
-      "arte:zersprungene_geige"
-    ] 
+      "art:zersprungene_geige"
+    ],
+    "starKey": "stern",
+    "starScale": 0.18
     }
   },
   "surprise": {

@@ -2,17 +2,58 @@
 export default class StarMapPuzzle {
   constructor(scene, config, onSolved) {
     this.scene = scene;
-    this.config = config;
+    this.config = Object.assign(
+      {
+        // Liste der verfügbaren Sets: ["alien", "komet", ...]
+        names: [],
+        // optionaler Basis-Pfad vor den Dateien, z. B. "assets/puzzles/starmap/"
+        basePath: "",
+        // optionales Muster, wenn deine Dateien anders heißen:
+        // Platzhalter {name} und {index} stehen zur Verfügung
+        // Standard: "{name}{index}.png"  -> "alien1.png" ... "alien25.png"
+        filePattern: "{name}{index}.png",
+        pieceSize: 128,
+        scaleFactor: 1
+      },
+      config || {}
+    );
+
     this.onSolved = onSolved;
 
     this.rows = 5;
     this.cols = 5;
-    this.pieceSize = config.pieceSize;
-    this.scaleFactor = config.scaleFactor || 1;
+    this.pieceSize = this.config.pieceSize;
+    this.scaleFactor = this.config.scaleFactor;
 
     this.pieces = [];
     this.gridSlots = [];
     this.selectedPiece = null;
+
+    // Set einmal pro Instanz wählen
+    if (!Array.isArray(this.config.names) || this.config.names.length === 0) {
+      console.warn("[StarMapPuzzle] Keine 'names' konfiguriert – es wird 'sternkarte' als Fallback verwendet.");
+      this.selectedSet = "sternkarte";
+    } else {
+      // Phaser-Helper vorhanden? Falls nicht, simples Zufallspick.
+      this.selectedSet = (window.Phaser && Phaser.Utils?.Array?.GetRandom)
+        ? Phaser.Utils.Array.GetRandom(this.config.names)
+        : this.config.names[Math.floor(Math.random() * this.config.names.length)];
+    }
+  }
+
+  preload() {
+    // 25 Teile: {name}{1..25}.png (oder gemäß filePattern)
+    for (let index = 1; index <= 25; index++) {
+      const key = `${this.selectedSet}${index}`;
+      if (!this.scene.textures.exists(key)) {
+        const url =
+          this.config.basePath +
+          this.config.filePattern
+            .replace("{name}", this.selectedSet)
+            .replace("{index}", index);
+        this.scene.load.image(key, url);
+      }
+    }
   }
 
   create(container) {
@@ -22,13 +63,13 @@ export default class StarMapPuzzle {
     const halfW = (cols / 2) * gridSize;
     const halfH = (rows / 2) * gridSize;
 
-    console.log("[StarMapPuzzle] create Sternkarte 5x5");
+    console.log(`[StarMapPuzzle] create 5x5 – Set="${this.selectedSet}"`);
 
-    // --- Puzzle-Teile ---
+    // --- Puzzle-Teile (immer 25) ---
     let index = 1;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        const key = `sternkarte${index}`;
+        const key = `${this.selectedSet}${index}`;
         const piece = this.scene.add.image(0, 0, key)
           .setOrigin(0.5)
           .setDisplaySize(gridSize, gridSize)
@@ -38,31 +79,30 @@ export default class StarMapPuzzle {
         piece.col = c;
         piece.placed = false;
 
-        // Startposition: garantiert außerhalb des Grid-Bereichs
-        const side = Phaser.Math.Between(0, 3); // 0=oben,1=unten,2=links,3=rechts
+        // Startposition außerhalb des Gitters randomisiert
+        const side = (window.Phaser ? Phaser.Math.Between(0, 3) : Math.floor(Math.random() * 4)); // 0..3
         switch (side) {
           case 0: // oben
-            piece.x = Phaser.Math.Between(-halfW * 1.2, halfW * 1.2);
-            piece.y = -halfH - Phaser.Math.Between(gridSize, 2 * gridSize);
+            piece.x = this._randBetween(-halfW * 1.2, halfW * 1.2);
+            piece.y = -halfH - this._randBetween(gridSize, 2 * gridSize);
             break;
           case 1: // unten
-            piece.x = Phaser.Math.Between(-halfW * 0.5, halfW * 1.2);
-            piece.y = halfH + Phaser.Math.Between(gridSize, 2 * gridSize);
+            piece.x = this._randBetween(-halfW * 0.5, halfW * 1.2);
+            piece.y = halfH + this._randBetween(gridSize, 2 * gridSize);
             break;
           case 2: // links
-            piece.x = -halfW - Phaser.Math.Between(gridSize, 2 * gridSize);
-            piece.y = Phaser.Math.Between(-halfH * 1.2, halfH * 0.1);
+            piece.x = -halfW - this._randBetween(gridSize, 2 * gridSize);
+            piece.y = this._randBetween(-halfH * 1.2, halfH * 0.1);
             break;
           case 3: // rechts
-            piece.x = halfW + Phaser.Math.Between(gridSize, 2 * gridSize);
-            piece.y = Phaser.Math.Between(-halfH * 1.2, halfH * 1.2);
+          default:
+            piece.x = halfW + this._randBetween(gridSize, 2 * gridSize);
+            piece.y = this._randBetween(-halfH * 1.2, halfH * 1.2);
             break;
         }
 
         piece.on("pointerdown", () => {
-          if (!piece.placed) {
-            this._selectPiece(piece);
-          }
+          if (!piece.placed) this._selectPiece(piece);
         });
 
         container.add(piece);
@@ -99,12 +139,9 @@ export default class StarMapPuzzle {
   }
 
   _selectPiece(piece) {
-    if (this.selectedPiece) {
-      this.selectedPiece.clearTint();
-    }
+    if (this.selectedPiece) this.selectedPiece.clearTint();
     this.selectedPiece = piece;
     piece.setTint(0x00ff00);
-    console.log(`[StarMapPuzzle] Piece selected: (${piece.row},${piece.col})`);
   }
 
   _placePieceInSlot(piece, slot) {
@@ -114,25 +151,30 @@ export default class StarMapPuzzle {
       slot.occupied = true;
       piece.clearTint();
       this.selectedPiece = null;
-      console.log(`[StarMapPuzzle] Piece locked at slot (${slot.row},${slot.col})`);
       this._checkSolved();
     } else {
       piece.clearTint();
       this.selectedPiece = null;
-      console.log(`[StarMapPuzzle] Wrong slot for piece (${piece.row},${piece.col})`);
     }
   }
 
   _checkSolved() {
     if (this.pieces.every(p => p.placed)) {
-      console.log("[StarMapPuzzle] Puzzle solved!");
       this.scene.events.emit("puzzleSolved");
       if (this.onSolved) this.onSolved();
     }
   }
 
+  _randBetween(min, max) {
+    if (window.Phaser) return Phaser.Math.Between(min, max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   destroy() {
     this.pieces.forEach(p => p.destroy());
     this.gridSlots.forEach(s => s.destroy());
+    this.pieces = [];
+    this.gridSlots = [];
+    this.selectedPiece = null;
   }
 }

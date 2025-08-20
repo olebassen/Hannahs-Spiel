@@ -76,8 +76,8 @@ export default class MapScene extends Phaser.Scene {
       posY = nextSpot.y;
     } else {
       // Fallback: Mitte der Map
-      posX = DESIGN_SIZE / 2;
-      posY = DESIGN_SIZE / 2;
+      posX = 180;
+      posY = 200;
     }
 
     // Container für den Charakter

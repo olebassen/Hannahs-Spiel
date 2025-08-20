@@ -153,13 +153,15 @@ this.load.image("art:verknotetes_seil", "assets/images/artifacts/verknotetes_sei
 
     // --- alle 25 Sternkarten-Teile ---
     for (let i = 1; i <= 25; i++) {
-      this.load.image(`sternkarte${i}`, `assets/images/puzzles/sternkarte${i}.png`);
+      this.load.image(`sternkarte${i}`, `assets/images/puzzles/sternkarte (${i}).png`);
+            this.load.image(`ufos${i}`, `assets/images/puzzles/ufos (${i}).png`);
+                  this.load.image(`alien${i}`, `assets/images/puzzles/alien (${i}).png`);
 }
     //Raum 13
     this.load.json("room:aula", "data/rooms/aula.json");
     this.load.image("bg:aula", "assets/images/rooms/aula.png");
     this.load.image("abschluss", "assets/images/surprise/feiernde_kinder.png");
-
+    this.load.image("stern", "assets/images/artifacts/stern.png");
     
     
   }

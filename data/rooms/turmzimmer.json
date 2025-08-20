@@ -6,7 +6,9 @@
     "rows": 5,
     "cols": 5,
     "pieceSize": 100,
-    "imageKey": "starmap"
+    "names": ["alien", "sternkarte", "ufos"],
+    "basePath": "assets/starmap/",
+    "filePattern": "{name}{index}.png"
   },
   "surprise": {
     "background": "fernrohr_monster",
