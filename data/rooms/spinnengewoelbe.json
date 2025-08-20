@@ -1,0 +1,99 @@
+{
+  "room": "spinnengewoelbe",
+  "background": "bg:spinnengewoelbe",
+  "puzzle": {
+    "type": "spiderweb",
+    "maxCuts": 3,
+    "nodes": [
+      { "id": "start", "x": -450, "y": -150 },
+      { "id": "a", "x": -300, "y": -300 },
+      { "id": "b", "x": -300, "y": 0 },
+      { "id": "c", "x": -300, "y": 150 },
+      { "id": "d", "x": -100, "y": -400 },
+      { "id": "e", "x": -100, "y": -150 },
+      { "id": "f", "x": -100, "y": 100 },
+      { "id": "g", "x": -100, "y": 350 },
+      { "id": "h", "x": 100, "y": -300 },
+      { "id": "i", "x": 100, "y": -100 },
+      { "id": "j", "x": 100, "y": 150 },
+      { "id": "k", "x": 100, "y": 400 },
+      { "id": "l", "x": 300, "y": -200 },
+      { "id": "m", "x": 300, "y": 0 },
+      { "id": "n", "x": 300, "y": 200 },
+      { "id": "goal", "x": 450, "y": 0 }
+    ],
+    "edges": [
+      { "from": "start", "to": "a", "type": "free" },
+      { "from": "start", "to": "b", "type": "web" },
+      { "from": "start", "to": "c", "type": "web" },
+
+      { "from": "a", "to": "d", "type": "web" },
+      { "from": "a", "to": "e", "type": "web" },
+      { "from": "a", "to": "h", "type": "web" },
+
+      { "from": "b", "to": "e", "type": "free" },
+      { "from": "b", "to": "f", "type": "web" },
+      { "from": "b", "to": "d", "type": "free" },
+      { "from": "b", "to": "i", "type": "web" },
+
+      { "from": "c", "to": "f", "type": "web" },
+      { "from": "c", "to": "g", "type": "free" },
+      { "from": "c", "to": "i", "type": "web" },
+      { "from": "c", "to": "j", "type": "web" },
+
+      { "from": "d", "to": "j", "type": "free" },
+      { "from": "d", "to": "h", "type": "web" },
+      { "from": "d", "to": "l", "type": "web" },
+      { "from": "d", "to": "n", "type": "free" },
+
+      { "from": "e", "to": "j", "type": "web" },
+      { "from": "e", "to": "i", "type": "web" },
+      { "from": "e", "to": "m", "type": "free" },
+      { "from": "e", "to": "l", "type": "web" },
+
+      { "from": "f", "to": "m", "type": "free" },
+      { "from": "f", "to": "j", "type": "web" },
+      { "from": "f", "to": "n", "type": "free" },
+      { "from": "f", "to": "i", "type": "web" },
+
+      { "from": "g", "to": "k", "type": "web" },
+      { "from": "g", "to": "j", "type": "web" },
+      { "from": "g", "to": "l", "type": "free" },
+      { "from": "g", "to": "m", "type": "web" },
+
+      { "from": "h", "to": "i", "type": "free" },
+      { "from": "h", "to": "l", "type": "web" },
+      { "from": "h", "to": "m", "type": "free" },
+      { "from": "h", "to": "n", "type": "web" },
+
+      { "from": "i", "to": "l", "type": "free" },
+      { "from": "i", "to": "m", "type": "web" },
+      { "from": "i", "to": "n", "type": "free" },
+
+      { "from": "j", "to": "m", "type": "web" },
+      { "from": "j", "to": "n", "type": "web" },
+      { "from": "j", "to": "m", "type": "free" },
+
+      { "from": "k", "to": "l", "type": "free" },
+      { "from": "k", "to": "m", "type": "web" },
+      { "from": "k", "to": "n", "type": "free" },
+      { "from": "k", "to": "goal", "type": "web" },
+
+      { "from": "l", "to": "goal", "type": "web" },
+
+
+      { "from": "m", "to": "goal", "type": "web" },
+
+
+      { "from": "n", "to": "goal", "type": "web" }
+    ]
+  },
+  "surprise": {
+    "background": "spinne_party",
+    "text": "EINE RIESIGE SPINNE MIT PARTYHUT ERSCHEINT UND TANZT UM DICH HERUM!"
+  },
+  "artifact": {
+    "id": "kristallene_spinne",
+    "text": "DIE KRISTALLENE SPINNE FUNKELT SCHWACH, ABER SIE WIRD DICH SCHUETZEN."
+  }
+}

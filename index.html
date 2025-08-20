@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nacht im Spukinternat</title>
+  <link rel="stylesheet" href="src/ui/overlay.css" />
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+</head>
+<body>
+      <span style="font-family:'SpukFont'; font-size:0; opacity:0;">.</span>
+  <!-- Canvas-Container -->
+  <div id="game"></div>
+
+  <!-- UI-Overlays (HTML, nicht im Canvas zeichnen) -->
+  <div id="inventory" aria-label="Inventar" role="region"></div>
+
+  <div id="settings" aria-label="Einstellungen" role="dialog" hidden>
+    <div class="panel">
+      <h2>Einstellungen</h2>
+      <label><input type="checkbox" id="mute"> Ton stummschalten</label><br/>
+      <label><input type="checkbox" id="reduceMotion"> Weniger Bewegung</label><br/>
+      <label>Textgröße
+        <input type="range" id="textScale" min="1" max="1.5" step="0.05" value="1">
+      </label><br/>
+      <button id="closeSettings">Schließen</button>
+    </div>
+  </div>
+
+  <script type="module" src="src/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+ Was wir schon haben
+
+ Vision & Spiel-Pillars: Erkunden statt Kämpfen; leichte Rätsel; unheimlich+lustig; Sessions ≈ 3 Min.; keine Timer.
+ Welt & Struktur: Spukinternat mit 12 Räumen + Finale; freie Erkundung, Bereichs-Freischaltung über Artefakte.
+ Designregeln: Einzelspieler, Figur erstellen, Belohnung = kurze Überraschung; Stil wie Wednesday.
+ Rätsel-Set (fix): Schieberätsel, Code-Knacken, Suchrätsel, Licht/Schatten, Verbindungspfade (keine Hör-Rätsel, nie Zeitdruck).
+ Komplette Raumkarte: Für jeden Raum definiert: Rätsel + Überraschung + Artefakt.
+ Technik-Wege: Browsergame mit Phaser 3 in JavaScript, JSON-getriebene Inhalte, localStorage-Save, responsive Canvas.
+ Produktionsansatz: PoC → Vertical Slice → Production → Politur (mit Playtests & Accessibility).
+
+ Was als Nächstes kommt (empfohlene Reihenfolge)
+
+1. Repo & Grundgerüst
+
+    Phaser-Projekt anlegen (index.html, game.js, Scenes: Boot/Map/Room/Surprise).
+    Responsive Scale-Mode, Basis-UI (Inventar-Overlay, Einstellungen: Mute/Motion/Schriftgröße).
+2. Datenformat festziehen
+
+    JSON-Schema für Räume/Progression (puzzle-Typ, surprise, artifact, assets).
+    2–3 Beispielräume als JSON (z. B. Bibliothek, Speisesaal, Turmzimmer).
+3. PoC „ein Raum end-to-end“
+
+    Schieberätsel implementieren (3×3, 4×4, lösbar-Check), Hint-Button.
+    Artefakt ins Inventar, Surprise-Sequenz, Autosave → zurück zur Map.
+    Touch + Maus sauber (Hitbox ≥ 44 px).
+4. Vertical Slice
+
+    Alle 5 Rätseltypen je einmal (insg. 4–6 Räume).
+    Einfache Progression (z. B. 3 Artefakte → Obergeschoss).
+    Kinder-Playtest: Verständlichkeit, Fehlklick-Rate, Rätseldauer.
+5. Content-Ausbau
+
+    Restliche 6 Räume nur via JSON ergänzen; Surprises/Artefakte zuweisen.
+    Performance-Budget (WebP, Texture-Atlases), Accessibility-Feinschliff.
+6. Finale & Release
+
+    Aula-Party, Credits, Deploy (Netlify/Vercel), leichter Fehler-Logger.
+
+ Konkrete To-dos für diese Woche
+
+ Projekt anlegen + Phaser einbinden.
+ `rooms/bibliothek.json` & `rooms/speisesaal.json` schreiben.
+ `RoomScene` generisch machen (lädt JSON, startet passendes Puzzle).
+ Schieberätsel fertigstellen (mit Hint & Undo).
+ Autosave (localStorage) nach Lösung + Artefakt.
+
+Wenn du magst, erstelle ich dir direkt:
+
+ ein Start-Repo-Skelett (HTML+JS+4 Scenes),
+ ein lauffähiges Schieberätsel-Modul (JS),
+ und 2 Beispiel-JSONs für Räume.
+
+Raumkarte „Nacht im Spukinternat“ (mit Artefakten)
+
+ Erdgeschoss
+
+1. Empfangshalle
+
+    Rätsel: Schattenrätsel – Kerzen so anordnen, dass sich ein Raben-Schatten bildet.
+    Überraschung: Die Ritterrüstung in der Ecke salutiert höflich.
+    Artefakt: Silberner Schlüssel (öffnet Türen im Obergeschoss).
+
+2. Speisesaal
+
+    Rätsel: Code-Knacken – Zahlen in geheimen Symbolen auf dem Besteck finden.
+    Überraschung: Ein Huhn springt aus der Suppenschüssel und kräht.
+    Artefakt: Verfluchter Löffel (Teil eines Besteck-Sets).
+
+3. Bibliothek
+
+    Rätsel: Schieberätsel mit dem zerbrochenen Familienwappen.
+    Überraschung: Ein Bücherregal klappt auf, eine Fledermaus liest Gedichte.
+    Artefakt: Schwarze Feder (Symbol des Wissens).
+
+---
+
+ Obergeschoss
+
+4. Schlafsaal
+
+    Rätsel: Suchrätsel – drei Schlüssel in den Betten finden.
+    Überraschung: Ein Bett schwebt kurz und landet mit einem Seufzer.
+    Artefakt: Altes Tagebuch (mit verschlossenen Seiten).
+
+5. Musikzimmer
+
+    Rätsel: Verbindungspfade – Notensymbole zu einem Muster verbinden.
+    Überraschung: Das Klavier spielt eine schräge Melodie von allein.
+    Artefakt: Zersprungene Geige (magisch, gibt keinen Ton mehr von sich).
+
+6. Geheimgang
+
+    Rätsel: Symbol-Code – Runen in richtiger Reihenfolge antippen.
+    Überraschung: Die Wand klappt auf, ein Geist winkt.
+    Artefakt: Verblasstes Gemälde (zeigt eine geheimnisvolle Figur).
+
+---
+
+ Keller
+
+7. Labor
+
+    Rätsel: Schieberätsel – zerbrochene Reagenzgläser zu einem Muster zusammensetzen.
+    Überraschung: Ein Skelett im Laborkittel gießt Tee ein.
+    Artefakt: Leuchtende Phiole (grünlich glimmend).
+
+8. Krypta
+
+    Rätsel: Code-Knacken – Hinweise auf Grabsteinen ergeben eine Kombination.
+    Überraschung: Ein Sarg öffnet sich, darin sitzt nur eine kichernde Puppe.
+    Artefakt: Geborstener Ring (eines alten Vampirfürsten).
+
+9. Spinnengewölbe
+
+    Rätsel: Verbindungspfade – Spinnennetze zu einem Sternmuster ziehen.
+    Überraschung: Eine riesige Spinne erscheint – mit Partyhut.
+    Artefakt: Kristallene Spinne (klein, funkelt schwach).
+
+---
+
+ Außenbereiche
+
+10. Friedhof
+
+ Rätsel: Gräber drehen.
+ Überraschung: Ein Grabstein rollt beiseite, ein lachendes Skelett erscheint.
+ Artefakt: Verwitterte Grabrose (schwarz getrocknet).
+
+11. Labyrinthgarten
+
+ Rätsel: Schattenrätsel – Figuren drehen, bis ein Totenkopfmuster entsteht.
+ Überraschung: Eine Vogelscheuche stolpert heraus und grüßt freundlich.
+ Artefakt: Verknotetes Seil (scheint eine verborgene Bedeutung zu haben).
+
+12. Turmzimmer
+
+ Rätsel: Schieberätsel – zerbrochene Sternkarte zusammensetzen.
+ Überraschung: Das Fernrohr zeigt ein Monster, das Grimassen schneidet.
+ Artefakt: Zerbrochene Sternkarte (Teil des Himmels über dem Internat).
+
+---
+
+ Finale
+
+13. Aula (Endraum)
+
+ Zugang: Öffnet sich, wenn alle Artefakte gesammelt wurden.
+ Rätsel: Keines.
+ Überraschung: Mitternachtsparty – alle Figuren feiern zusammen.
+ Artefakt: Schwarzer Kristall (erscheint automatisch als Abschluss-Symbol).

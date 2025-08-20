@@ -1,0 +1,19 @@
+{
+  "id": "labyrinthgarten",
+  "name": "Labyrinthgarten",
+  "background": "bg:labyrinthgarten",
+  "puzzle": {
+    "type": "labyrinth",
+    "image": "labyrinth",
+    "start": "lab_start",
+    "goal": "lab_goal"
+  },
+  "surprise": {
+    "background": "vogelscheuche",
+    "text": "EINE VOGELSCHEUCHE STOLPERT AUS DEM GEBUESCH UND GRUESST FREUNDLICH."
+  },
+  "artifact": {
+    "id": "verknotetes_seil",
+    "text": "EIN GROBES SEIL, DAS SICH IN SELTSAMEN KNOTEN VERSCHLUNGEN HAT. ES SCHEINT EINE VERBORGENE BEDEUTUNG ZU TRAGEN."
+  }
+}

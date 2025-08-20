@@ -1,0 +1,36 @@
+{
+  "room": "krypta",
+  "background": "bg:krypta",
+  "puzzle": {
+    "type": "sokoban",
+      "offsetX": -250,
+  "offsetY": -250,
+    "grid": [
+
+      "##########",
+      "#.       #",
+      "#        #", 
+      "####### ##",
+      "#@ $    #",
+      "#       #",
+      "#########"
+    ],
+    "tileset": {
+      "#": "wall",
+      " ": "floor",
+      ".": "goal",
+      "$": "coffin",
+      "@": "player"
+    },
+    "tileSize": 64
+  },
+  "surprise": {
+    "background": "puppe_kichert",
+    "text": "EINE SUESSE KLEINE PUPPE MOECHTE MIT DIR SPIELEN."
+
+  },
+  "artifact": {
+    "id": "geborstener_ring",
+    "text": "SIE GIBT DIR DEN GEBORSTENEN RING EINES VAMPIRLORDS."
+  }
+}

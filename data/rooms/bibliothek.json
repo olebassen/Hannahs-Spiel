@@ -1,0 +1,17 @@
+{
+  "id": "bibliothek",
+  "title": "Bibliothek",
+  "background": "bg:bibliothek",
+  "puzzle": {
+    "type": "slider",
+    "img": "assets/images/puzzles/familienwappen.png",
+    "grid": 3
+  },
+  "surprise": {
+    "text": "EIN REGAL KLAPPT AUF UND EINE FLEDERMAUS REZITIERT DUESTERE LIMERICKS.",
+    "background": "fledermaus"
+  },
+  "artifact": { 
+    "id": "schwarze_feder", 
+    "text": "AUS DEM SCHRANK SEGELT EINE SCHWARZE FEDER." }
+}

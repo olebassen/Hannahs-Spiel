@@ -1,0 +1,19 @@
+{
+  "room": "turmzimmer",
+  "background": "bg:turmzimmer",
+  "puzzle": {
+    "type": "starmap",
+    "rows": 5,
+    "cols": 5,
+    "pieceSize": 100,
+    "imageKey": "starmap"
+  },
+  "surprise": {
+    "background": "fernrohr_monster",
+    "text": "DAS FERNROHR ZEIGT EIN MONSTER, DAS GRIMASSEN SCHNEIDET!"
+  },
+  "artifact": {
+    "id": "zerbrochene_sternkarte",
+    "text": "DIE ZERBROCHENE STERNKARTE ZEIGT EIN STUECK DES HIMMELS UEBER DEM INTERNAT."
+  }
+}

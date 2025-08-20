@@ -1,0 +1,16 @@
+{
+  "id": "speisesaal",
+  "title": "Speisesaal",
+  "background": "bg:speisesaal",
+  "puzzle": {
+    "type": "code",
+    "digits": 4,
+    "solution": [2, 7, 2, 3],
+    "hint": "SETZT EUCH AUF UNSERE STUEHLE, ENTZUENDET DIE KERZEN, TRINKT AUS UNSEREN TASSEN UND ESST MIT UNSEREN GABELN."
+  },
+  "surprise": {
+    "text": "EIN HUHN SPRINGT AUS DER SUPPENSCHUESSEL UND KRAEHT.",
+    "background": "huhn"
+  },
+  "artifact": { "id": "verfluchter_loeffel", "text": "EIN VERFLUCHTER LOEFFEL FAELLT EUCH VOR DIE FUESSE." }
+}

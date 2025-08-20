@@ -1,0 +1,24 @@
+{
+  "id": "labor",
+  "name": "Labor",
+  "background": "bg:labor",
+  "puzzle": {
+    "type": "swap",
+    "config": {
+      "imageKey": "reagenz",
+      "rows": 3,
+      "cols": 3,
+      "x": -250,
+      "y": -250
+    }
+  },
+  "surprise": {
+    "background": "labor_surprise",
+    "text": "EIN SKELETT IM LABORKITTEL GIESST DIR EINEN TEE EIN."
+  },
+  "artifact": {
+    "id": "leuchtende_phiole",
+    "text": "DU FINDEST EINE GRUENLICH GLIMMENDE PHIOLE, DIE LEICHT ZITTERT..."
+  }
+
+}

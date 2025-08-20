@@ -1,0 +1,36 @@
+{
+  "id": "musikzimmer",
+  "name": "Musikzimmer",
+  "background": "bg:musikzimmer",
+  "puzzle": {
+    "type": "path",
+    "config": {
+      "points": [
+        { "x": -45, "y": 100 }, 
+        { "x": -45, "y": -300 }, 
+        { "x": -15, "y": -300 }, 
+        { "x": -15, "y": 100 }, 
+        { "x": 15, "y": 100 }, 
+        { "x": 15, "y": -300 }, 
+        { "x": 45, "y": -300 }, 
+        { "x": 45, "y": 100 }, 
+        { "x": 130, "y": 100 }, 
+        { "x": 150, "y": -50 }, 
+        { "x": -150, "y": -50 }, 
+        { "x": -130, "y": 100 }, 
+        { "x": -150, "y": 300 }, 
+        { "x": 150, "y": 300 }
+      ],
+      "order": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,8],
+      "hint": "VERBINDE DIE PUNKTE ZU EINER UKULELE."
+    }
+  },
+  "surprise": {
+    "background": "musikzimmer_surprise",
+    "text": "DAS KLAVIER BEGINNT VON SELBST EINE SCHRAEGE MELODIE ZU SPIELEN..."
+  },
+  "artifact": {
+    "id": "zersprungene_geige",
+    "text": "DU FINDEST EINE ZERSPRUNGENE GEIGE. MAGISCH, ABER SIE GIBT KEINEN TON MEHR VON SICH."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "geheimgang",
+  "name": "Geheimgang",
+  "background": "geheimgang",
+  "puzzle": {
+    "type": "symbolCode",
+    "config": {
+      "symbols": [
+        { "key": "rune1", "path": "assets/images/puzzles/rune1.png" },
+        { "key": "rune2", "path": "assets/images/puzzles/rune2.png" },
+        { "key": "rune3", "path": "assets/images/puzzles/rune3.png" },
+        { "key": "rune4", "path": "assets/images/puzzles/rune4.png" }
+      ],
+      "solution": ["rune3", "rune1", "rune4", "rune2"],
+      "positions": [
+        { "x": -250, "y": -250 },
+        { "x": 250, "y": -250 },
+        { "x": -250, "y": 250 },
+        { "x": 250, "y": 250 }
+      ]
+    }
+  },
+  "surprise": {
+    "background": "geist",
+    "text": "DIE WAND KLAPPT AUF UND EIN GEIST WINKT DIR MUNTER ZU."
+  },
+  "artifact": {
+    "id": "verblasstes_gemaelde",
+    "text": "DAS VERBLASSTE GEMAELDE EINES BAROCKEN ADELIGEN FAELLT DIR IN DIE HAENDE."
+  }
+}

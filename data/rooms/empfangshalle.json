@@ -1,0 +1,26 @@
+{
+  "id": "empfangshalle",
+  "title": "Empfangshalle",
+  "background": "empfangshalle",
+  "puzzle": {
+    "type": "shadow",
+    "img": "kerzen",
+    "mask": "rabesilhouette",
+    "slots": [
+  { "x": -150, "y": -100, "targetAngle": 90 },
+  { "x": 0,    "y": -200, "targetAngle": 180 },
+  { "x": 150,  "y": -100, "targetAngle": 270 },
+  { "x": -80,  "y": 100,  "targetAngle": 0 },
+  { "x": 80,   "y": 100,  "targetAngle": 0 }
+]
+
+  },
+  "surprise": {
+    "text": "DIE RITTERRUESTUNG IN DER ECKE SALUTIERT HOEFLICH.",
+    "background": "empfangshalle_surprise"
+  },
+  "artifact": {
+    "id": "silberschluessel",
+    "text": "EIN SILBERNER SCHLUESSEL TAUCHT AUS DEM NICHTS AUF."
+  }
+}

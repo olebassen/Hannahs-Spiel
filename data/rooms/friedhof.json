@@ -1,0 +1,42 @@
+{
+  "id": 10,
+  "name": "Friedhof",
+  "background": "bg:friedhof",
+  "puzzle": {
+    "type": "grave",
+    "config": {
+      "mask": "totenschaedel_silhouette",
+      "graves": [
+        { "x": -240, "y": -240, "targetAngle": 0,   "img": "grab1" },
+        { "x": -80,  "y": -240, "targetAngle": 90,  "img": "grab2" },
+        { "x": 80,   "y": -240, "targetAngle": 180, "img": "grab3" },
+        { "x": 240,  "y": -240, "targetAngle": 270, "img": "grab4" },
+
+        { "x": -240, "y": -80, "targetAngle": 180, "img": "grab5" },
+        { "x": -80,  "y": -80, "targetAngle": 270, "img": "grab6" },
+        { "x": 80,   "y": -80, "targetAngle": 0,   "img": "grab7" },
+        { "x": 240,  "y": -80, "targetAngle": 90,  "img": "grab8" },
+
+        { "x": -240, "y": 80, "targetAngle": 270, "img": "grab9" },
+        { "x": -80,  "y": 80, "targetAngle": 0,   "img": "grab10" },
+        { "x": 80,   "y": 80, "targetAngle": 90,  "img": "grab11" },
+        { "x": 240,  "y": 80, "targetAngle": 180, "img": "grab12" },
+
+        { "x": -240, "y": 240, "targetAngle": 0,   "img": "grab13" },
+        { "x": -80,  "y": 240, "targetAngle": 90,  "img": "grab14" },
+        { "x": 80,   "y": 240, "targetAngle": 180, "img": "grab15" },
+        { "x": 240,  "y": 240, "targetAngle": 270, "img": "grab16" }
+      ],
+      "hint": "RICHTE ALLE GRABSTEINE SO AUS, DASS DIE VERBORGENE SILHOUETTE SICHTBAR WIRD."
+    }
+  },
+  "surprise": {
+    "id": "lachendes_skelett",
+  "text": "EIN GRABSTEIN ROLLT BEISEITE, EIN LACHENDES SKELETT ERSCHEINT."
+  },
+  "artifact": {
+    "id": "grabrose",
+    "name": "Verwitterte Grabrose",
+    "text": "EINE SCHWARZ GETROCKNETE ROSE, BRUECHIG UND VOLLER GEHEIMNISSE."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "schlafsaal",
+  "name": "Schlafsaal",
+  "background": "bg:schlafsaal",
+  "puzzle": {
+    "type": "hiddenObjects",
+    "config": {
+      "objects": [
+        { "key": "key1", "x": 365, "y": 435 },
+        { "key": "key2", "x": -200, "y": 150 },
+        { "key": "key3", "x": 50, "y": 150 }
+      ],
+      "hint": "FINDE DIE DREI SCHLUESSEL, DIE ZWISCHEN DEN BETTEN VERSTECKT SIND."
+    }
+  },
+  "surprise": {
+    "background": "schlafsaal_surprise",
+    "text": "PLOETZLICH BEGINNT EINES DER BETTEN ZU SCHWEBEN. ES HEBT SICH EIN STUECK VOM BODEN, KNARRT, UND LANDET MIT EINEM LANGEN, GEQUAELTEN SEUFZER WIEDER AN SEINEM PLATZ..."
+  },
+  "artifact": {
+    "id": "altes_tagebuch",
+    "text": "DU FINDEST EIN ALTES TAGEBUCH MIT VERSCHLOSSENEN SEITEN. ES SCHEINT GEHEIMNISSE ZU BERGEN, DIE ERST NOCH ENTSCHLUESSELT WERDEN MUESSEN..."
+  }
+}

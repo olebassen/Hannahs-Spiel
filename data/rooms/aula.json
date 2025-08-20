@@ -1,0 +1,28 @@
+{
+  "room": "aula",
+  "name": "Aula",
+  "background": "bg:aula",
+  "puzzle": {
+    "type": "tree",
+    "config": {
+      "artifacts": [
+      "art:schwarze_feder", 
+      "art:verfluchter_loeffel", 
+      "art:silberschluessel", 
+      "art:altes_tagebuch", 
+      "art:verblasstes_gemaelde", 
+      "art:leuchtende_phiole", 
+      "art:geborstener_ring", 
+      "art:kristallene_spinne", 
+      "art:grabrose", 
+      "art:verknotetes_seil", 
+      "art:zerbrochene_sternkarte",
+      "arte:zersprungene_geige"
+    ] 
+    }
+  },
+  "surprise": {
+    "background": "abschluss",
+    "text": "DER BAUM IST GESCHMUECKT – DAS FEST BEGINNT!"
+  }
+}
