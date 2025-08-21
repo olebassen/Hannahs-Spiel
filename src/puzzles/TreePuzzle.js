@@ -115,7 +115,7 @@ _showGoldenStar() {
       const texKey = "baumfoto";
       const canvas = this.scene.textures.createCanvas(texKey, image.width, image.height);
       const ctx = canvas.getContext();
-      ctx.drawImage(image, 0, 0);
+      ctx.drawImage(image, 100, 0);
       canvas.refresh();
 
       const photo = this.scene.add.image(0, 0, texKey).setScale(0.3).setDepth(999);
