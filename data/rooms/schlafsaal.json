@@ -6,10 +6,13 @@
     "type": "hiddenObjects",
     "config": {
       "objects": [
-        { "key": "key1", "x": 365, "y": 435 },
-        { "key": "key2", "x": -200, "y": 150 },
-        { "key": "key3", "x": 50, "y": 150 }
+        { "key": "key1"},
+        { "key": "key2"},
+        { "key": "key3"}
       ],
+      "area": { "x": 0, "y": 0, "width": 800, "height": 800 },
+      "noSpawnZone": { "x": 0, "y": 0, "width": 100, "height": 500 },
+      "randomRotation": true,
       "hint": "FINDE DIE DREI SCHLUESSEL, DIE ZWISCHEN DEN BETTEN VERSTECKT SIND."
     }
   },

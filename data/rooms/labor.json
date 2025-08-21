@@ -5,7 +5,7 @@
   "puzzle": {
     "type": "swap",
     "config": {
-      "imageKey": "reagenz",
+      "names": ["reagenz", "professor", "frankenstein", "reagenz2"], 
       "rows": 3,
       "cols": 3,
       "x": -250,

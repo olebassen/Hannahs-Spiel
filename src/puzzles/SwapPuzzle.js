@@ -4,22 +4,62 @@ import { DESIGN_SIZE } from "../config.js";
 export default class SwapPuzzle {
   constructor(scene, cfg, onSolved) {
     this.scene = scene;
-    this.cfg = cfg;
+    this.cfg = Object.assign(
+      {
+        rows: 3,
+        cols: 3,
+        tileSize: 160,
+        // NEU: mehrere Alternativen
+        names: null,               // z.B. ["reagenzglas", "kolben", "alien"]
+        basePath: "",              // z.B. "assets/puzzles/swap/"
+        filePattern: "{name}.png", // wie der Basisbild-Dateiname heißt
+        // fallback (alt):
+        imageKey: null,
+        path: null,
+        x: undefined,
+        y: undefined
+      },
+      cfg || {}
+    );
     this.onSolved = onSolved;
 
-    this.rows = cfg.rows || 3;
-    this.cols = cfg.cols || 3;
-    this.imageKey = cfg.imageKey; // z. B. "reagenzglas"
-    this.tileSize = cfg.tileSize || 160;
+    this.rows = this.cfg.rows;
+    this.cols = this.cfg.cols;
+    this.tileSize = this.cfg.tileSize;
+
+    // Zufälliges Set wählen (oder altes imageKey verwenden)
+    this.selectedKey = this._pickImageKey();
 
     this.tiles = [];
     this.positions = [];
     this.selected = null;
   }
 
+  _pickImageKey() {
+    if (Array.isArray(this.cfg.names) && this.cfg.names.length > 0) {
+      // Random aus 'names'
+      if (window.Phaser && Phaser.Utils?.Array?.GetRandom) {
+        return Phaser.Utils.Array.GetRandom(this.cfg.names);
+      }
+      return this.cfg.names[Math.floor(Math.random() * this.cfg.names.length)];
+    }
+    // Rückwärtskompatibel
+    return this.cfg.imageKey;
+  }
+
   preload() {
-    if (this.imageKey && !this.scene.textures.exists(this.imageKey)) {
-      this.scene.load.image(this.imageKey, this.cfg.path);
+    // Basisbild laden, falls noch nicht vorhanden
+    if (!this.selectedKey) return;
+
+    if (!this.scene.textures.exists(this.selectedKey)) {
+      // bevorzugt: names + basePath + filePattern
+      if (Array.isArray(this.cfg.names) && this.cfg.names.length > 0) {
+        const url = this.cfg.basePath + this.cfg.filePattern.replace("{name}", this.selectedKey);
+        this.scene.load.image(this.selectedKey, url);
+      } else if (this.cfg.path) {
+        // rückwärtskompatibel: imageKey + path
+        this.scene.load.image(this.selectedKey, this.cfg.path);
+      }
     }
   }
 
@@ -27,16 +67,16 @@ export default class SwapPuzzle {
     const { rows, cols, tileSize } = this;
 
     // Bild in Teile zerlegen
-    const texture = this.scene.textures.get(this.imageKey);
+    const texture = this.scene.textures.get(this.selectedKey);
     const base = texture.getSourceImage();
-    const pieceWidth = base.width / cols;
-    const pieceHeight = base.height / rows;
+    const pieceWidth = Math.floor(base.width / cols);
+    const pieceHeight = Math.floor(base.height / rows);
 
-    // Skalierung berechnen, damit jedes Tile tileSize groß wird
+    // Skalierung berechnen
     const scaleX = tileSize / pieceWidth;
     const scaleY = tileSize / pieceHeight;
 
-    // Offsets: entweder aus cfg oder automatisch zentriert
+    // Offsets: aus cfg oder automatisch zentriert
     const offsetX = this.cfg.x !== undefined
       ? this.cfg.x
       : DESIGN_SIZE / 2 - (cols * tileSize) / 2;
@@ -44,16 +84,13 @@ export default class SwapPuzzle {
       ? this.cfg.y
       : DESIGN_SIZE / 2 - (rows * tileSize) / 2;
 
-    // Canvas-Slices erzeugen
+    // Canvas-Slices erzeugen (ein Key pro Tile)
+    this.positions = [];
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        const key = `${this.imageKey}_${row}_${col}`;
+        const key = `${this.selectedKey}_${row}_${col}`;
         if (!this.scene.textures.exists(key)) {
-          const rt = this.scene.textures.createCanvas(
-            key,
-            pieceWidth,
-            pieceHeight
-          );
+          const rt = this.scene.textures.createCanvas(key, pieceWidth, pieceHeight);
           const ctx = rt.getContext();
           ctx.drawImage(
             base,
@@ -72,10 +109,11 @@ export default class SwapPuzzle {
       }
     }
 
-    // Mischen
+    // zufällig mischen (Swap-Puzzle ist immer lösbar, da du beliebige Paare tauschen kannst)
     Phaser.Utils.Array.Shuffle(this.positions);
 
     // Tiles anlegen
+    this.tiles = [];
     this.positions.forEach((pos, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
@@ -88,8 +126,9 @@ export default class SwapPuzzle {
         .setOrigin(0)
         .setScale(scaleX, scaleY);
 
-      tile.correctRow = parseInt(pos.key.split("_")[1]);
-      tile.correctCol = parseInt(pos.key.split("_")[2]);
+      // Korrekte Zielposition aus dem Slicenamen lesen
+      tile.correctRow = parseInt(pos.key.split("_")[1], 10);
+      tile.correctCol = parseInt(pos.key.split("_")[2], 10);
       tile.currIndex = i;
 
       tile.on("pointerdown", () => this._selectTile(tile));
@@ -102,8 +141,15 @@ export default class SwapPuzzle {
   _selectTile(tile) {
     if (!this.selected) {
       this.selected = tile;
-      tile.setTint(0xffff00); // gelb markieren
+      tile.setTint(0xffff00); // markieren
     } else {
+      if (this.selected === tile) {
+        // erneut auf dasselbe Tile: Auswahl aufheben
+        this.selected.clearTint();
+        this.selected = null;
+        return;
+      }
+
       this._swapTiles(this.selected, tile);
       this.selected.clearTint();
       this.selected = null;
@@ -138,5 +184,8 @@ export default class SwapPuzzle {
 
   destroy() {
     this.tiles.forEach(t => t.destroy());
+    this.tiles = [];
+    this.positions = [];
+    this.selected = null;
   }
 }

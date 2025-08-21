@@ -58,7 +58,7 @@ export default class PathPuzzle {
     // Punkte anlegen
     this.dots = [];
     points.forEach((p, i) => {
-      const dot = this.scene.add.circle(p.x, p.y, 10, 0x444444)
+      const dot = this.scene.add.circle(p.x, p.y, 10, 0xFFFFFF)
         .setInteractive({ useHandCursor: true })
         .setDepth(2);
 

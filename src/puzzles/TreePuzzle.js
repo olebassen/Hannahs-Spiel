@@ -46,18 +46,27 @@ export default class TreePuzzle {
     this._showPhotoButton();
   }
 
-  _showPhotoButton() {
-    const btn = this.scene.add.text(400, DESIGN_SIZE / 2 - 100, "📸", {
-      fontFamily: "SpukFont", fontSize: "100px", color: "#fff"
-    })
-      .setOrigin(0.5)
-      .setPadding(12)
-      .setInteractive({ useHandCursor: true })
-      .setDepth(1000);
+_showPhotoButton() {
+  // große Depth, bleibt über allem
+  const BTN_DEPTH = 10000;
 
-    btn.on("pointerdown", () => this._takePhoto());
-    this.container.add(btn);
-  }
+  const btn = this.scene.add.text(400, DESIGN_SIZE / 2 - 100, "📸", {
+    fontFamily: "SpukFont", fontSize: "100px", color: "#fff"
+  })
+    .setOrigin(0.5)
+    .setPadding(12)
+    .setInteractive({ useHandCursor: true })
+    .setDepth(BTN_DEPTH);
+
+  // lieber auf pointerup reagieren (weniger Race mit Drag/Pointerdown)
+  btn.on("pointerup", () => this._takePhoto());
+
+  this.container.add(btn);
+
+  // Referenz merken, damit wir ihn später wieder nach vorne holen können
+  this._photoBtn = btn;
+}
+
 
   _checkAllClicked() {
     if (this._starShown) return;
@@ -90,6 +99,13 @@ _showGoldenStar() {
 
   this.container.add(star);
 
+  
+  // Button wieder ganz nach vorne
+  if (this._photoBtn) {
+    this._photoBtn.setDepth(10000);
+    this.scene.children.bringToTop(this._photoBtn);
+  }
+  
   // Pop-in + dezentes Wackeln
   star.setScale(scale * 0.5);
   this.scene.tweens.add({
@@ -110,29 +126,69 @@ _showGoldenStar() {
 }
 
 
-  _takePhoto() {
-    this.scene.game.renderer.snapshot((image) => {
-      const texKey = "baumfoto";
-      const canvas = this.scene.textures.createCanvas(texKey, image.width, image.height);
-      const ctx = canvas.getContext();
-      ctx.drawImage(image, 100, 0);
-      canvas.refresh();
+_takePhoto() {
+  this.scene.game.renderer.snapshot((image) => {
+    // --- Zielgröße fürs Foto (Crop) ---
+    const defaultW = 500;
+    const defaultH = 1000;
 
-      const photo = this.scene.add.image(0, 0, texKey).setScale(0.3).setDepth(999);
-      const frame = this.scene.add.rectangle(0, 0, 200, 200, 0xffffff).setDepth(998);
+    const cropCfg = this.config.photoCrop || {};
+    const cropW = Math.floor(cropCfg.width  ?? defaultW);
+    const cropH = Math.floor(cropCfg.height ?? defaultH);
 
-      photo.angle = Phaser.Math.Between(-5, 5);
-      frame.angle = photo.angle;
+    // Quelle: wenn x/y gegeben → nutze sie; sonst zentriere den Ausschnitt
+    const srcX = Math.max(0, Math.floor(
+      cropCfg.x != null ? cropCfg.x : (image.width  - cropW) / 2
+    ));
+    const srcY = Math.max(0, Math.floor(
+      cropCfg.y != null ? cropCfg.y : (image.height - cropH) / 2
+    ));
 
-      this.scene.tweens.add({
-        targets: [photo, frame],
-        y: "+=200",
-        duration: 1200,
-        ease: "Bounce.Out",
-        onComplete: () => this.scene.time.delayedCall(2000, () => this.onSolved && this.onSolved())
-      });
+    // Sichere Begrenzung, falls der Ausschnitt über Bildrand liegt
+    const sW = Math.min(cropW, image.width  - srcX);
+    const sH = Math.min(cropH, image.height - srcY);
+
+    // Canvas-Textur exakt in Crop-Größe anlegen
+    const texKey = "baumfoto";
+    const canvas = this.scene.textures.createCanvas(texKey, sW, sH);
+    const ctx = canvas.getContext();
+
+    // Nur den gewünschten Ausschnitt kopieren
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    ctx.drawImage(image, srcX, srcY, sW, sH, 0, 0, sW, sH);
+    canvas.refresh();
+
+    // Anzeige
+    const scale = 0.3; // Anzeigeskalierung
+    const photo = this.scene.add.image(0, 0, texKey)
+      .setScale(scale)
+      .setDepth(999);
+
+    // Polaroid-Rahmen dynamisch passend zur Foto-Größe
+    const padX = 10;          // Rand links/rechts
+    const padTop = 10;        // Rand oben
+    const padBottom = 40;     // breiter Rand unten (Polaroid-Style)
+    const frameW = sW * scale + padX * 2;
+    const frameH = sH * scale + padTop + padBottom;
+
+    const frame = this.scene.add.rectangle(0, 0, frameW, frameH, 0xffffff).setDepth(998);
+
+    // leichte Rotation + Drop
+    photo.angle = Phaser.Math.Between(-5, 5);
+    frame.angle = photo.angle;
+
+    this.scene.tweens.add({
+      targets: [photo, frame],
+      y: "+=200",
+      duration: 1200,
+      ease: "Bounce.Out",
+      onComplete: () => {
+        this.scene.time.delayedCall(2000, () => this.onSolved && this.onSolved());
+      }
     });
-  }
+  });
+}
+
 
   destroy() {
     this.container?.destroy(true);

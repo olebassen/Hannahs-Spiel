@@ -90,6 +90,9 @@ export default class BootScene extends Phaser.Scene {
     this.load.json("room:labor", "data/rooms/labor.json");
     this.load.image("bg:labor", "assets/images/rooms/labor.png");
     this.load.image("reagenz", "assets/images/puzzles/reagenz.png");
+    this.load.image("reagenz2", "assets/images/puzzles/reagenz2.png");
+    this.load.image("frankenstein", "assets/images/puzzles/frankenstein.png");
+    this.load.image("professor", "assets/images/puzzles/professor.png");
     this.load.image("labor_surprise", "assets/images/surprise/skelett.png");
     this.load.image("art:leuchtende_phiole", "assets/images/artifacts/leuchtende_phiole.png");
 

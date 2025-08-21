@@ -75,7 +75,7 @@ export default class CodeLockPuzzle {
       baseX, problemsY, problemsStr,
       {
         fontFamily: "Arial",
-        fontSize: `${DESIGN_SIZE * 0.02}px`,
+        fontSize: `${DESIGN_SIZE * 0.03}px`,
         color: "#dddddd",
         align: "center",
         wordWrap: { width: Math.max(digits * spacing + spacing, DESIGN_SIZE * 0.85) }
